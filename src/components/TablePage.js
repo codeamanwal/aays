@@ -1,58 +1,88 @@
-import React, { useState } from 'react';
-import Card from './Card'; // Import the Card component
+import React, { useState } from "react";
+import Card from "./Card";
+import EditModal from "./EditModal";
+import CommentModal from "./CommentModal";
+import ConfirmModal from "./ConfirmModal";
 
 const TablePage = () => {
   const [entries, setEntries] = useState([
     {
-      name: 'Deyanira Juliet',
-      account: 'SECURITY NEXTGEN',
-      title: 'Founder',
-      createdBy: 'Jeremy',
-      date: '03/05/2021',
-      status: 'In Progress',
+      name: "Deyanira Juliet",
+      account: "SECURITY NEXTGEN",
+      title: "Founder",
+      createdBy: "Jeremy",
+      date: "2021-03-05",
+      status: "In Progress",
+      comments: [],
     },
     {
-      name: 'Cliff Majersik',
-      account: 'Institute for Marketing',
-      title: 'Director of Marketing',
-      createdBy: 'Jeremy',
-      date: '11/10/2020',
-      status: 'Not Interested',
+      name: "Cliff Majersik",
+      account: "Institute for Marketing",
+      title: "Director of Marketing",
+      createdBy: "Jeremy",
+      date: "2020-11-10",
+      status: "Not Interested",
+      comments: [],
     },
     {
-      name: 'Shyla Raghav',
-      account: 'Conservation Movement',
-      title: 'Vice President',
-      createdBy: 'Jeremy',
-      date: '09/18/2020',
-      status: 'Not Interested',
+      name: "Shyla Raghav",
+      account: "Conservation Movement",
+      title: "Vice President",
+      createdBy: "Jeremy",
+      date: "2020-09-18",
+      status: "Not Interested",
+      comments: [],
     },
   ]);
 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState(null);
+
+  // Function to open Edit Modal with selected entry data
   const handleEdit = (entry) => {
-    const newStatus = prompt('Update Status:', entry.status);
-    if (newStatus) {
-      setEntries((prevEntries) =>
-        prevEntries.map((e) =>
-          e.name === entry.name ? { ...e, status: newStatus } : e
-        )
-      );
-    }
+    setSelectedEntry(entry);
+    setIsEditModalOpen(true);
   };
 
+  // Function to save updated entry from Edit Modal
+  const handleSave = (updatedEntry) => {
+    setEntries((prevEntries) =>
+      prevEntries.map((e) => (e.name === updatedEntry.name ? updatedEntry : e))
+    );
+    setIsEditModalOpen(false);
+  };
+
+  // Function to open Confirm Modal for delete confirmation
   const handleDelete = (entry) => {
-    if (window.confirm(`Are you sure you want to delete ${entry.name}?`)) {
-      setEntries((prevEntries) =>
-        prevEntries.filter((e) => e.name !== entry.name)
-      );
-    }
+    setSelectedEntry(entry);
+    setIsConfirmModalOpen(true);
   };
 
+  // Function to confirm and delete the selected entry
+  const confirmDelete = () => {
+    setEntries((prevEntries) =>
+      prevEntries.filter((e) => e.name !== selectedEntry.name)
+    );
+    setIsConfirmModalOpen(false);
+  };
+
+  // Function to open Comment Modal with selected entry data
   const handleComment = (entry) => {
-    const comment = prompt(`Add a comment for ${entry.name}:`);
-    if (comment) {
-      console.log(`Comment on ${entry.name}: ${comment}`);
-    }
+    setSelectedEntry(entry);
+    setIsCommentModalOpen(true);
+  };
+
+  // Function to add a new comment to the selected entry
+  const handleAddComment = (newComment) => {
+    setEntries((prevEntries) =>
+      prevEntries.map((e) =>
+        e.name === selectedEntry.name
+          ? { ...e, comments: [...e.comments, newComment] }
+          : e
+      )
+    );
   };
 
   return (
@@ -71,6 +101,30 @@ const TablePage = () => {
       ) : (
         <p className="text-gray-500">No entries available</p>
       )}
+
+      {/* Edit Modal */}
+      <EditModal
+        entry={selectedEntry}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSave={handleSave}
+      />
+
+      {/* Comment Modal */}
+      <CommentModal
+        entry={selectedEntry}
+        isOpen={isCommentModalOpen}
+        onClose={() => setIsCommentModalOpen(false)}
+        onAddComment={handleAddComment}
+      />
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={confirmDelete}
+        message={`Are you sure you want to delete ${selectedEntry?.name}?`}
+      />
     </div>
   );
 };

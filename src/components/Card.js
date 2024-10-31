@@ -26,8 +26,6 @@ const Card = ({ entry, onEdit, onDelete, onComment }) => {
       {/* Created By and Date */}
       <div className="w-32 text-center">
         <p className="text-gray-700 font-medium">{entry.createdBy}</p>
-      </div>
-      <div className="w-32 text-center">
         <p className="text-sm text-gray-500">{entry.date}</p>
       </div>
 
@@ -46,10 +44,15 @@ const Card = ({ entry, onEdit, onDelete, onComment }) => {
         </p>
       </div>
 
-      {/* Action Icons */}
-      <div className="flex space-x-4">
-        <button onClick={() => onComment(entry)}>
+      {/* Action Icons with Comment Count */}
+      <div className="flex items-center space-x-3">
+        <button onClick={() => onComment(entry)} className="relative">
           <ChatBubbleLeftRightIcon className="w-6 h-6 text-purple-500" />
+          {entry.comments && entry.comments.length > 0 && (
+            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
+              {entry.comments.length}
+            </span>
+          )}
         </button>
         <button onClick={() => onEdit(entry)}>
           <PencilIcon className="w-6 h-6 text-gray-500" />
