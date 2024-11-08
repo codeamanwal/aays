@@ -1,15 +1,19 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import FormPage from './components/FormPage';
-import TablePage from './components/TablePage';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import DashboardLayout from "./components/DashboardLayout";
+import TablePage from "./components/TablePage";
+import FormPage from "./components/FormPage";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<FormPage />} />
-        <Route path="/table" element={<TablePage />} />
-      </Routes>
+      <DashboardLayout>
+        <Routes>
+          <Route path="/" element={<TablePage />} />
+          <Route path="/form" element={<FormPage />} />
+          {/* Add more routes here as needed */}
+        </Routes>
+      </DashboardLayout>
     </Router>
   );
 }
