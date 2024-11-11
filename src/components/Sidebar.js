@@ -37,7 +37,7 @@ const Sidebar = () => {
             <span className="text-md">Overview</span>
           </NavLink>
           <NavLink
-            to="/user"
+            to="/"
             className={({ isActive }) =>
               `flex items-center space-x-3 p-3 rounded-lg transition ${
                 isActive ? "bg-[#bb1ccc] text-white" : "text-white hover:bg-[#bb1ccc]"
