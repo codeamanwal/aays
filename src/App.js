@@ -15,8 +15,8 @@ function App() {
 
         {/* Protected routes inside DashboardLayout */}
         <Route element={<DashboardLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/" element={<TablePage />} />
+        <Route path="/" element={<Dashboard />} />
+          <Route path="/user" element={<TablePage />} />
           <Route path="/form" element={<FormPage />} />
         </Route>
       </Routes>

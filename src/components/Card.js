@@ -6,41 +6,48 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Card = ({ entry, onEdit, onDelete, onComment }) => {
+  // Helper function to get field value by label
+  const getField = (label) => {
+    return (
+      entry.fields.find((field) => field.label === label)?.userInput || "N/A"
+    );
+  };
+
   return (
     <div className="flex items-center bg-white shadow-md p-4 rounded-lg mb-2 space-x-4">
       {/* Profile Section */}
       <div className="flex-shrink-0">
         <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-gray-500 text-xl font-semibold">
-          {entry.name[0]}
+          {getField("Name")[0] || "?"}
         </div>
       </div>
 
       {/* Name and Role Section */}
       <div className="flex-1">
-        <p className="font-medium text-gray-800">{entry.name}</p>
+        <p className="font-medium text-gray-800">{getField("Name")}</p>
         <p className="text-sm text-gray-500">
-          {entry.account} &middot; {entry.title}
+          {getField("Account")} &middot; {getField("Title")}
         </p>
       </div>
 
       {/* Created By and Date */}
       <div className="w-32 text-center">
         <p className="text-gray-700 font-medium">{entry.createdBy}</p>
-        <p className="text-sm text-gray-500">{entry.date}</p>
+        <p className="text-sm text-gray-500">{getField("Form Filled Date")}</p>
       </div>
 
       {/* Status */}
       <div className="w-32 text-center">
         <p
           className={`text-sm font-semibold ${
-            entry.status === "In Progress"
+            getField("Meeting Status") === "In Progress"
               ? "text-yellow-500"
-              : entry.status === "Not Interested"
+              : getField("Meeting Status") === "Completed"
               ? "text-green-500"
               : "text-gray-500"
           }`}
         >
-          {entry.status}
+          {getField("Meeting Status")}
         </p>
       </div>
 

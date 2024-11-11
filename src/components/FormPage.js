@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const FormPage = () => {
   const [formData, setFormData] = useState({
@@ -23,16 +24,76 @@ const FormPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+
+    const formattedData = {
+      formName: "User Feedback Form",
+      createdBy: "User@example.com",
+      fields: [
+        { label: "Name", fieldType: "text", userInput: formData.name },
+        {
+          label: "Profile URL",
+          fieldType: "text",
+          userInput: formData.profileUrl,
+        },
+        { label: "Account", fieldType: "text", userInput: formData.account },
+        { label: "Title", fieldType: "text", userInput: formData.title },
+        { label: "Email", fieldType: "email", userInput: formData.email },
+        { label: "Route To", fieldType: "text", userInput: formData.routeTo },
+        {
+          label: "Meeting Status",
+          fieldType: "dropdown",
+          userInput: formData.meetingStatus,
+        },
+        {
+          label: "Meeting Date",
+          fieldType: "date",
+          userInput: formData.meetingDate,
+        },
+        {
+          label: "Next Steps",
+          fieldType: "text",
+          userInput: formData.nextSteps,
+        },
+        { label: "Amount", fieldType: "number", userInput: formData.amount },
+        {
+          label: "Closed Date",
+          fieldType: "date",
+          userInput: formData.closedDate,
+        },
+        { label: "Source", fieldType: "dropdown", userInput: formData.source },
+        { label: "Notes", fieldType: "textarea", userInput: formData.notes },
+        {
+          label: "List Name",
+          fieldType: "dropdown",
+          userInput: formData.listName,
+        },
+      ],
+    };
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/api/forms/save`,
+        formattedData
+      );
+      console.log("Form submitted successfully:", response.data);
+      alert("Form submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting form:", error.response || error);
+      alert(
+        `Error submitting form: ${
+          error.response?.data?.error || "Unknown error"
+        }`
+      );
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-lg p-8 w-[600px] space-y-6"
+        className="bg-white shadow-md rounded-lg p-6 w-full max-w-lg space-y-6 max-h-[80vh] overflow-y-auto"
       >
         <h2 className="text-2xl font-semibold text-center">Add Target</h2>
 
@@ -138,7 +199,7 @@ const FormPage = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
           >
             Save
           </button>

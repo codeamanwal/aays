@@ -26,7 +26,7 @@ const Sidebar = () => {
             Dashboard
           </h3>
           <NavLink
-            to="/dashboard"
+            to="/"
             className={({ isActive }) =>
               `flex items-center space-x-3 p-3 rounded-lg transition ${
                 isActive ? "bg-[#bb1ccc] text-white" : "text-white hover:bg-[#bb1ccc]"
@@ -37,7 +37,7 @@ const Sidebar = () => {
             <span className="text-md">Overview</span>
           </NavLink>
           <NavLink
-            to="/"
+            to="/user"
             className={({ isActive }) =>
               `flex items-center space-x-3 p-3 rounded-lg transition ${
                 isActive ? "bg-[#bb1ccc] text-white" : "text-white hover:bg-[#bb1ccc]"

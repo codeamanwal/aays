@@ -1,108 +1,110 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import EditModal from "./EditModal";
 import CommentModal from "./CommentModal";
 import ConfirmModal from "./ConfirmModal";
+import axios from "axios";
 
 const TablePage = () => {
-  const [entries, setEntries] = useState([
-    {
-      name: "Deyanira Juliet",
-      account: "SECURITY NEXTGEN",
-      title: "Founder",
-      createdBy: "Jeremy",
-      date: "2021-03-05",
-      status: "In Progress",
-      comments: [],
-    },
-    {
-      name: "Cliff Majersik",
-      account: "Institute for Marketing",
-      title: "Director of Marketing",
-      createdBy: "Jeremy",
-      date: "2020-11-10",
-      status: "Not Interested",
-      comments: [],
-    },
-    {
-      name: "Shyla Raghav",
-      account: "Conservation Movement",
-      title: "Vice President",
-      createdBy: "Jeremy",
-      date: "2020-09-18",
-      status: "Not Interested",
-      comments: [],
-    },
-  ]);
-
+  const [entries, setEntries] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Function to open Edit Modal with selected entry data
+  useEffect(() => {
+    const fetchForms = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/admin/all`
+        );
+        setEntries(response.data);
+      } catch (error) {
+        console.error("Error fetching forms data:", error);
+      }
+      setIsLoading(false);
+    };
+
+    fetchForms();
+  }, []);
+
   const handleEdit = (entry) => {
     setSelectedEntry(entry);
     setIsEditModalOpen(true);
   };
 
-  // Function to save updated entry from Edit Modal
-  const handleSave = (updatedEntry) => {
-    setEntries((prevEntries) =>
-      prevEntries.map((e) => (e.name === updatedEntry.name ? updatedEntry : e))
-    );
+  const handleSave = async (updatedEntry) => {
+    if (updatedEntry.formId) {
+      try {
+        await axios.put(
+          `${process.env.REACT_APP_BASE_URL}/edit/${updatedEntry.formId}`,
+          updatedEntry
+        );
+        setEntries((prevEntries) =>
+          prevEntries.map((e) =>
+            e.formId === updatedEntry.formId ? updatedEntry : e
+          )
+        );
+      } catch (error) {
+        console.error("Error updating entry:", error);
+      }
+    } else {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/save`,
+          updatedEntry
+        );
+        setEntries((prevEntries) => [...prevEntries, response.data]);
+      } catch (error) {
+        console.error("Error saving new entry:", error);
+      }
+    }
     setIsEditModalOpen(false);
   };
 
-  // Function to open Confirm Modal for delete confirmation
   const handleDelete = (entry) => {
     setSelectedEntry(entry);
     setIsConfirmModalOpen(true);
   };
 
-  // Function to confirm and delete the selected entry
-  const confirmDelete = () => {
-    setEntries((prevEntries) =>
-      prevEntries.filter((e) => e.name !== selectedEntry.name)
-    );
-    setIsConfirmModalOpen(false);
-  };
-
-  // Function to open Comment Modal with selected entry data
-  const handleComment = (entry) => {
-    setSelectedEntry(entry);
-    setIsCommentModalOpen(true);
-  };
-
-  // Function to add a new comment to the selected entry
-  const handleAddComment = (newComment) => {
-    setEntries((prevEntries) =>
-      prevEntries.map((e) =>
-        e.name === selectedEntry.name
-          ? { ...e, comments: [...e.comments, newComment] }
-          : e
-      )
-    );
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/delete/${selectedEntry.formId}`
+      );
+      setEntries((prevEntries) =>
+        prevEntries.filter((e) => e.formId !== selectedEntry.formId)
+      );
+      setIsConfirmModalOpen(false);
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+    }
   };
 
   return (
     <div className="p-10 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-semibold mb-4">Targets</h1>
-      {entries.length > 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="loader"></div>
+          <p>Loading...</p>
+        </div>
+      ) : entries.length > 0 ? (
         entries.map((entry, index) => (
           <Card
             key={index}
             entry={entry}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            onComment={handleComment}
+            onComment={() => setIsCommentModalOpen(true)}
           />
         ))
       ) : (
         <p className="text-gray-500">No entries available</p>
       )}
 
-      {/* Edit Modal */}
       <EditModal
         entry={selectedEntry}
         isOpen={isEditModalOpen}
@@ -110,20 +112,17 @@ const TablePage = () => {
         onSave={handleSave}
       />
 
-      {/* Comment Modal */}
       <CommentModal
         entry={selectedEntry}
         isOpen={isCommentModalOpen}
         onClose={() => setIsCommentModalOpen(false)}
-        onAddComment={handleAddComment}
       />
 
-      {/* Confirm Delete Modal */}
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={confirmDelete}
-        message={`Are you sure you want to delete ${selectedEntry?.name}?`}
+        message={`Are you sure you want to delete ${selectedEntry?.formName}?`}
       />
     </div>
   );
