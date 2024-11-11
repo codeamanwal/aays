@@ -4,7 +4,7 @@ import {
   UsersIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -25,27 +25,39 @@ const Sidebar = () => {
           <h3 className="text-white uppercase text-xs font-semibold">
             Dashboard
           </h3>
-          <Link
+          <NavLink
             to="/dashboard"
-            className="flex items-center space-x-3 p-3 rounded-lg text-white hover:bg-[#bb1ccc] hover:text-white transition"
+            className={({ isActive }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition ${
+                isActive ? "bg-[#bb1ccc] text-white" : "text-white hover:bg-[#bb1ccc]"
+              }`
+            }
           >
             <HomeIcon className="h-5 w-5" />
             <span className="text-md">Overview</span>
-          </Link>
-          <Link
-            to="/"
-            className="flex items-center space-x-3 p-3 rounded-lg text-white hover:bg-[#bb1ccc] hover:text-white transition"
+          </NavLink>
+          <NavLink
+            to="/user"
+            className={({ isActive }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition ${
+                isActive ? "bg-[#bb1ccc] text-white" : "text-white hover:bg-[#bb1ccc]"
+              }`
+            }
           >
             <UsersIcon className="h-5 w-5" />
             <span className="text-md">User Management</span>
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/form"
-            className="flex items-center space-x-3 p-3 rounded-lg text-white hover:bg-[#bb1ccc] hover:text-white transition"
+            className={({ isActive }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition ${
+                isActive ? "bg-[#bb1ccc] text-white" : "text-white hover:bg-[#bb1ccc]"
+              }`
+            }
           >
             <PencilIcon className="h-5 w-5" />
             <span className="text-md">Form</span>
-          </Link>
+          </NavLink>
         </div>
       </nav>
     </div>
