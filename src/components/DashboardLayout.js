@@ -1,8 +1,9 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import { Outlet } from "react-router-dom"; // Import Outlet
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -16,7 +17,9 @@ const DashboardLayout = ({ children }) => {
         <Navbar />
 
         {/* Page Content */}
-        <div className="p-6 overflow-y-auto">{children}</div>
+        <div className="p-6 overflow-y-auto">
+          <Outlet /> {/* Render nested routes here */}
+        </div>
       </div>
     </div>
   );
