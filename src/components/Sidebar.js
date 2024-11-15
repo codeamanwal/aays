@@ -15,12 +15,12 @@ const Sidebar = () => {
     navigate(`/`);
   };
   return (
-    <div className="bg-[#131213] shadow-lg w-64 h-full py-6 pr-6 overflow-y-auto flex flex-col justify-between text-white">
+    <div className="bg-[#131213] shadow-lg w-68 h-full py-6 pr-6 overflow-y-auto flex flex-col justify-between text-white">
       {/* Logo */}
       <div className="space-y-8">
         <div className="flex items-center space-x-3 mb-8 pl-6">
           <img
-            src="/assets/logo2.png"
+            src="../assets/logo2.png"
             alt="AAYS Analytics Logo"
             className="h-12"
           />

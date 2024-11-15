@@ -11,7 +11,7 @@ const Overview = () => {
   ];
 
   return (
-    <div className="flex flex-wrap gap-6 p-6 bg-gray-100">
+    <div className="flex flex-wrap gap-6 p-4 bg-gray-100">
       {forms.map((form, index) => (
         <FormCard
           key={index}
