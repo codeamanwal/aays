@@ -27,7 +27,7 @@ const Question = ({
   };
 
   return (
-    <div className="p-6 bg-white shadow rounded-lg border border-gray-200 mb-6 relative">
+    <div className="p-6 bg-white shadow rounded-lg border border-gray-200 mb-6 relative mt-6">
       <input
         type="text"
         value={question.text}

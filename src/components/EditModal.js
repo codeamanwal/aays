@@ -1,62 +1,75 @@
 import React, { useState, useEffect } from "react";
-
 const EditModal = ({ entry, isOpen, onClose, onSave }) => {
-  const [formData, setFormData] = useState(entry ? entry.fields : []);
-
+  const [formData, setFormData] = useState({ ...entry });
+  // Update formData whenever the entry prop changes
   useEffect(() => {
     if (entry) {
-      setFormData(entry.fields);
+      setFormData({ ...entry });
     }
   }, [entry]);
-
-  const handleFieldChange = (e, index) => {
-    const { value } = e.target;
-    setFormData((prevData) =>
-      prevData.map((field, i) =>
-        i === index ? { ...field, userInput: value } : field
-      )
-    );
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-
   const handleSave = () => {
-    const updatedEntry = { ...entry, fields: formData };
-    onSave(updatedEntry); // Pass updated entry to parent for PUT request
+    onSave(formData);
     onClose();
   };
-
   if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-xl font-semibold mb-4">Edit Target</h2>
         <div className="space-y-3">
-          {formData.map((field, index) => (
-            <div key={field.id} className="flex flex-col">
-              <label className="text-sm text-gray-600">{field.label}</label>
-              {field.fieldType === "dropdown" ? (
-                <select
-                  value={field.userInput || ""}
-                  onChange={(e) => handleFieldChange(e, index)}
-                  className="w-full px-4 py-2 border rounded"
-                >
-                  {field.options.split(", ").map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type={field.fieldType}
-                  value={field.userInput || ""}
-                  onChange={(e) => handleFieldChange(e, index)}
-                  placeholder={field.label}
-                  className="w-full px-4 py-2 border rounded"
-                />
-              )}
-            </div>
-          ))}
+          <input
+            type="text"
+            name="name"
+            value={formData.name || ""}
+            onChange={handleChange}
+            placeholder="Name"
+            className="w-full px-4 py-2 border rounded"
+          />
+          <input
+            type="text"
+            name="account"
+            value={formData.account || ""}
+            onChange={handleChange}
+            placeholder="Account"
+            className="w-full px-4 py-2 border rounded"
+          />
+          <input
+            type="text"
+            name="title"
+            value={formData.title || ""}
+            onChange={handleChange}
+            placeholder="Title"
+            className="w-full px-4 py-2 border rounded"
+          />
+          <input
+            type="text"
+            name="createdBy"
+            value={formData.createdBy || ""}
+            onChange={handleChange}
+            placeholder="Created By"
+            className="w-full px-4 py-2 border rounded"
+          />
+          <input
+            type="date"
+            name="date"
+            value={formData.date || ""}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+          <select
+            name="status"
+            value={formData.status || ""}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+          >
+            <option value="In Progress">In Progress</option>
+            <option value="Not Interested">Not Interested</option>
+            <option value="Completed">Completed</option>
+          </select>
         </div>
         <div className="flex justify-end mt-4 space-x-2">
           <button
@@ -76,5 +89,4 @@ const EditModal = ({ entry, isOpen, onClose, onSave }) => {
     </div>
   );
 };
-
 export default EditModal;

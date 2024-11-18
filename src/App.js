@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DashboardLayout from "./components/DashboardLayout";
-import TablePage from "./components/TablePage";
+import TablePage from "./pages/TablePage";
 import FormPage from "./pages/FormPage";
 import LoginPage from "./pages/LoginPage";
 import Overview from "./pages/Overview";

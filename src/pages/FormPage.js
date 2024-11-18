@@ -1,140 +1,204 @@
 import React, { useState } from "react";
-import FormHeader from "../components/FormHeader";
-import Question from "../components/Question";
-import SidebarToolbar from "../components/SidebarToolbar";
 
 const FormPage = () => {
-  const [title, setTitle] = useState("Form Title");
-  const [description, setDescription] = useState("Form Description");
-  const [questions, setQuestions] = useState([]);
+  const [formData, setFormData] = useState({
+    supplierCode: "",
+    productCode: "",
+    netQuantity: "",
+    purchaseOrder: "",
+    batchNumber: "",
+    eudrReference: "",
+    eudrVerification: "",
+    eudrSubmissionDate: "",
+    referencingDDS: false,
+    geolocationFile: "",
+    geolocationConfidential: "",
+    formProgress: "",
+  });
 
-  const addQuestion = () => {
-    setQuestions([
-      ...questions,
-      {
-        id: Date.now(),
-        text: "",
-        type: "single-choice",
-        options: [{ text: "Option 1", image: "" }],
-      },
-    ]);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const updateQuestionText = (id, text) => {
-    setQuestions(questions.map((q) => (q.id === id ? { ...q, text } : q)));
+  const handleToggleChange = () => {
+    setFormData({ ...formData, referencingDDS: !formData.referencingDDS });
   };
 
-  const updateQuestionType = (id, type) => {
-    setQuestions(
-      questions.map((q) =>
-        q.id === id
-          ? {
-              ...q,
-              type,
-              options: type === "text" ? [] : [{ text: "Option 1", image: "" }],
-            }
-          : q
-      )
-    );
-  };
-
-  const updateOption = (questionId, optionIndex, value) => {
-    setQuestions(
-      questions.map((q) =>
-        q.id === questionId
-          ? {
-              ...q,
-              options: q.options.map((opt, idx) =>
-                idx === optionIndex ? value : opt
-              ),
-            }
-          : q
-      )
-    );
-  };
-
-  const addOption = (id) => {
-    setQuestions(
-      questions.map((q) =>
-        q.id === id
-          ? {
-              ...q,
-              options: [
-                ...q.options,
-                { text: `Option ${q.options.length + 1}`, image: "" },
-              ],
-            }
-          : q
-      )
-    );
-  };
-
-  const removeOption = (questionId, optionIndex) => {
-    setQuestions(
-      questions.map((q) =>
-        q.id === questionId
-          ? { ...q, options: q.options.filter((_, idx) => idx !== optionIndex) }
-          : q
-      )
-    );
-  };
-
-  const deleteQuestion = (id) => {
-    setQuestions(questions.filter((q) => q.id !== id));
-  };
-
-  const duplicateQuestion = (id) => {
-    const questionToDuplicate = questions.find((q) => q.id === id);
-    if (questionToDuplicate) {
-      const duplicatedQuestion = {
-        ...questionToDuplicate,
-        id: Date.now(), // Assign a new unique ID
-        options: questionToDuplicate.options.map((opt) => ({ ...opt })), // Deep copy options
-      };
-      const index = questions.findIndex((q) => q.id === id);
-      const newQuestions = [...questions];
-      newQuestions.splice(index + 1, 0, duplicatedQuestion); // Insert duplicate below the original
-      setQuestions(newQuestions);
-    }
-  };
-
-  const doneEditingQuestion = (id) => {
-    // Implement any desired action when the "Done" button is clicked
-    console.log(`Question with ID ${id} is done editing`);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4 relative">
-      <SidebarToolbar
-        onAddQuestion={addQuestion}
-        onAddTitle={() => {}}
-        onAddSection={() => {}}
-        onAddImage={() => {}}
-        onAddVideo={() => {}}
-      />
-      <div className="w-full max-w-2xl">
-        <FormHeader
-          title={title}
-          description={description}
-          onTitleChange={setTitle}
-          onDescriptionChange={setDescription}
-        />
+    <div className="flex items-center justify-center bg-gray-100 py-10">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg rounded-lg p-8 max-w-[1000px] space-y-6"
+      >
+        <h2 className="text-2xl font-semibold text-center">
+          Submit New Due-Diligence Statement Information
+        </h2>
 
-        {questions.map((question) => (
-          <Question
-            key={question.id}
-            question={question}
-            onQuestionTextChange={updateQuestionText}
-            onQuestionTypeChange={updateQuestionType}
-            onOptionChange={updateOption}
-            onAddOption={addOption}
-            onRemoveOption={removeOption}
-            onDeleteQuestion={deleteQuestion}
-            onDuplicateQuestion={duplicateQuestion}
-            onDoneEditing={doneEditingQuestion}
+        <div className="grid grid-cols-2 gap-6">
+          {/* Supplier or Partner Code */}
+          <input
+            name="supplierCode"
+            placeholder="Supplier or Partner Code (*)"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+            required
           />
-        ))}
-      </div>
+
+          {/* Product Code */}
+          <input
+            name="productCode"
+            placeholder="Product Code (*)"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+            required
+          />
+
+          {/* Net Quantity */}
+          <input
+            name="netQuantity"
+            placeholder="Net Quantity (Kg) (*)"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+            required
+          />
+
+          {/* Mars Purchase Order */}
+          <input
+            name="purchaseOrder"
+            placeholder="Mars Purchase Order No. (*)"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+            required
+          />
+
+          {/* Delivery Batch Number */}
+          <input
+            name="batchNumber"
+            placeholder="Delivery Batch Number or Bill of Lader (*)"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+            required
+          />
+
+          {/* EUDR DDS Reference */}
+          <input
+            name="eudrReference"
+            placeholder="EUDR DDS Reference No. (*)"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+          />
+
+          {/* EUDR DDS Verification */}
+          <input
+            name="eudrVerification"
+            placeholder="EUDR DDS Verification No. (*)"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+          />
+
+          {/* EUDR DDS Submission Date */}
+          <input
+            type="date"
+            name="eudrSubmissionDate"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+            required
+          />
+
+          {/* Referencing DDS Toggle */}
+          <div className="flex items-center space-x-4">
+            <label className="text-gray-700">Referencing a DDS? (*)</label>
+            <div
+              onClick={handleToggleChange}
+              className={`cursor-pointer w-12 h-6 flex items-center rounded-full p-1 ${
+                formData.referencingDDS ? "bg-blue-600" : "bg-gray-300"
+              }`}
+            >
+              <div
+                className={`h-4 w-4 bg-white rounded-full shadow-md transform ${
+                  formData.referencingDDS ? "translate-x-6" : ""
+                }`}
+              ></div>
+            </div>
+          </div>
+
+          {/* Geolocation File Upload */}
+          <div className="flex items-center space-x-4">
+            <label className="text-gray-700">Geolocation File (*)</label>
+            <input
+              type="file"
+              name="geolocationFile"
+              onChange={(e) =>
+                setFormData({ ...formData, geolocationFile: e.target.files[0] })
+              }
+              className="border rounded px-3 py-2 w-full"
+              required
+            />
+          </div>
+
+          {/* Geolocation Confidential Radio */}
+          <div className="flex items-center space-x-4">
+            <label className="text-gray-700">
+              Is Geolocation Data Confidential?
+            </label>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="geolocationConfidential"
+                  value="Yes"
+                  onChange={handleChange}
+                />
+                <span>Yes</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="geolocationConfidential"
+                  value="No"
+                  onChange={handleChange}
+                />
+                <span>No</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Form Progress Dropdown */}
+          <select
+            name="formProgress"
+            onChange={handleChange}
+            className="border rounded px-3 py-2 w-full"
+            required
+          >
+            <option value="">Select Form Progress</option>
+            <option value="Started">Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex justify-between">
+          <button
+            type="button"
+            className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-500"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >
+            Preview
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
