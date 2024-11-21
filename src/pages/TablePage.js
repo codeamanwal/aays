@@ -2,45 +2,43 @@ import React, { useState, useEffect } from "react";
 import Card from "../components/Card";
 import EditModal from "../components/EditModal";
 import ConfirmModal from "../components/ConfirmModal";
+import ViewModal from "../components/ViewModal";
 
 const TablePage = () => {
-  // Mock data for logged-in user
   const loggedInUser = {
     role: "admin", // Change to "admin" for admin users
     name: "Jeremy", // User's name to filter entries
   };
 
-  const [entries, setEntries] = useState([
-    {
-      name: "Deyanira Juliet",
-      account: "SECURITY NEXTGEN",
-      title: "Founder",
-      createdBy: "Jeremy",
-      date: "2021-03-05",
-      status: "In Progress",
-    },
-    {
-      name: "Cliff Majersik",
-      account: "Institute for Marketing",
-      title: "Director of Marketing",
-      createdBy: "Jeremy",
-      date: "2020-11-10",
-      status: "Not Interested",
-    },
-    {
-      name: "Shyla Raghav",
-      account: "Conservation Movement",
-      title: "Vice President",
-      createdBy: "AdminUser",
-      date: "2020-09-18",
-      status: "Not Interested",
-    },
-  ]);
-
+  const [entries, setEntries] = useState([]);
   const [filteredEntries, setFilteredEntries] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
+  const [loading, setLoading] = useState(true); // Loader state
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // Fetch data from API
+  useEffect(() => {
+    const fetchEntries = async () => {
+      try {
+        setLoading(true); // Show loader
+        const response = await fetch(
+          `${process.env.REACT_APP_BASE_URL}/all-forms`
+        );
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        setEntries(data);
+      } catch (error) {
+        console.error("Error fetching entries:", error);
+      } finally {
+        setLoading(false); // Hide loader
+      }
+    };
+
+    fetchEntries();
+  }, []);
 
   // Filter entries based on user role
   useEffect(() => {
@@ -48,51 +46,104 @@ const TablePage = () => {
       setFilteredEntries(entries); // Admin sees all entries
     } else {
       setFilteredEntries(
-        entries.filter((entry) => entry.createdBy === loggedInUser.name) // User sees only their own entries
+        entries.filter((entry) => entry.createdBy === loggedInUser.name)
       );
     }
   }, [entries, loggedInUser]);
 
-  // Function to open Edit Modal
+  // Open Edit Modal
   const handleEdit = (entry) => {
     setSelectedEntry(entry);
     setIsEditModalOpen(true);
   };
 
-  // Function for the View button (does nothing for now)
+  // Open View Modal
   const handleView = (entry) => {
-    console.log("View clicked for entry:", entry); // Placeholder for View action
+    setSelectedEntry(entry);
+    setIsViewModalOpen(true);
   };
 
-  // Function to open Confirm Modal for delete confirmation
+  // Open Confirm Delete Modal
   const handleDelete = (entry) => {
     setSelectedEntry(entry);
     setIsConfirmModalOpen(true);
   };
 
-  // Function to confirm delete
-  const confirmDelete = () => {
-    setEntries((prevEntries) =>
-      prevEntries.filter((e) => e.name !== selectedEntry.name)
-    );
-    setIsConfirmModalOpen(false);
+  // Confirm Delete Action
+  const confirmDelete = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/delete/${selectedEntry.formId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        setEntries((prevEntries) =>
+          prevEntries.filter((e) => e.formId !== selectedEntry.formId)
+        );
+        setSuccessMessage(
+          `Form "${selectedEntry.formId}" deleted successfully!`
+        );
+        setIsConfirmModalOpen(false);
+      } else {
+        setSuccessMessage("Failed to delete the form. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting the form:", error);
+      setSuccessMessage("An error occurred while deleting the form.");
+    }
   };
 
   return (
     <div className="p-10 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-semibold mb-4">Targets</h1>
-      {filteredEntries.length > 0 ? (
-        filteredEntries.map((entry, index) => (
-          <Card
-            key={index}
-            entry={entry}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onView={handleView} // Pass the View handler
-          />
-        ))
+
+      {loading ? (
+        // Loader UI
+        <div className="flex justify-center items-center h-60">
+          <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+        </div>
       ) : (
-        <p className="text-gray-500">No entries available</p>
+        <>
+          {successMessage && (
+            <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-lg">
+              {successMessage}
+            </div>
+          )}
+
+          {filteredEntries.length > 0 ? (
+            filteredEntries.map((entry, index) => (
+              <Card
+                key={index}
+                entry={{
+                  name:
+                    entry.fields.find((f) => f.label === "Name")?.userInput ||
+                    "N/A",
+                  account:
+                    entry.fields.find((f) => f.label === "Account")
+                      ?.userInput || "N/A",
+                  title:
+                    entry.fields.find((f) => f.label === "Title")?.userInput ||
+                    "N/A",
+                  createdBy: entry.createdBy,
+                  date:
+                    entry.fields.find((f) => f.label === "Date")?.userInput ||
+                    "N/A",
+                  status:
+                    entry.fields.find((f) => f.label === "Status")?.userInput ||
+                    "N/A",
+                }}
+                onEdit={() => handleEdit(entry)}
+                onDelete={() => handleDelete(entry)}
+                onView={() => handleView(entry)}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500">No entries available</p>
+          )}
+        </>
       )}
 
       {/* Edit Modal */}
@@ -107,7 +158,14 @@ const TablePage = () => {
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={confirmDelete}
-        message={`Are you sure you want to delete ${selectedEntry?.name}?`}
+        message={`Are you sure you want to delete this entry?`}
+      />
+
+      {/* View Modal */}
+      <ViewModal
+        entry={selectedEntry}
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
       />
     </div>
   );

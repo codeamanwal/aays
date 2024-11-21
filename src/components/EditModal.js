@@ -1,92 +1,135 @@
 import React, { useState, useEffect } from "react";
+
 const EditModal = ({ entry, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({ ...entry });
+  const [isSaving, setIsSaving] = useState(false);
+
   // Update formData whenever the entry prop changes
   useEffect(() => {
     if (entry) {
-      setFormData({ ...entry });
+      const fieldsData = entry.fields.reduce((acc, field) => {
+        acc[field.label] = field.userInput;
+        return acc;
+      }, {});
+      setFormData({ ...entry, ...fieldsData });
     }
   }, [entry]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-  const handleSave = () => {
-    onSave(formData);
-    onClose();
+
+  const handleSave = async () => {
+    setIsSaving(true);
+
+    const updatedFields = entry.fields.map((field) => ({
+      label: field.label,
+      userInput: formData[field.label] || field.userInput,
+    }));
+
+    const updatedEntry = {
+      formId: entry.formId,
+      createdBy: entry.createdBy,
+      fields: updatedFields,
+    };
+
+    console.log(updatedEntry)
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/edit/${entry.formId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedEntry),
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        onSave(result); // Pass the updated entry to the parent
+        alert("Form updated successfully!");
+      } else {
+        alert("Failed to update the form. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error updating the form:", error);
+      alert("An error occurred while updating the form.");
+    } finally {
+      setIsSaving(false);
+      onClose();
+    }
   };
+
   if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">Edit Target</h2>
-        <div className="space-y-3">
-          <input
-            type="text"
-            name="name"
-            value={formData.name || ""}
-            onChange={handleChange}
-            placeholder="Name"
-            className="w-full px-4 py-2 border rounded"
-          />
-          <input
-            type="text"
-            name="account"
-            value={formData.account || ""}
-            onChange={handleChange}
-            placeholder="Account"
-            className="w-full px-4 py-2 border rounded"
-          />
-          <input
-            type="text"
-            name="title"
-            value={formData.title || ""}
-            onChange={handleChange}
-            placeholder="Title"
-            className="w-full px-4 py-2 border rounded"
-          />
-          <input
-            type="text"
-            name="createdBy"
-            value={formData.createdBy || ""}
-            onChange={handleChange}
-            placeholder="Created By"
-            className="w-full px-4 py-2 border rounded"
-          />
-          <input
-            type="date"
-            name="date"
-            value={formData.date || ""}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          <select
-            name="status"
-            value={formData.status || ""}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          >
-            <option value="In Progress">In Progress</option>
-            <option value="Not Interested">Not Interested</option>
-            <option value="Completed">Completed</option>
-          </select>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-[1000px] w-full overflow-y-auto max-h-[90vh]">
+        <h2 className="text-2xl font-semibold text-center mb-6">Edit Form</h2>
+
+        <div className="grid grid-cols-2 gap-6">
+          {/* Dynamic Fields */}
+          {entry.fields?.map((field) => (
+            <div key={field.label}>
+              <label
+                htmlFor={field.label}
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {field.label}
+              </label>
+              {field.fieldType === "dropdown" ? (
+                <select
+                  name={field.label}
+                  value={formData[field.label] || ""}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded"
+                >
+                  {field.options?.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={field.fieldType === "number" ? "number" : "text"}
+                  name={field.label}
+                  value={formData[field.label] || ""}
+                  onChange={handleChange}
+                  placeholder={field.label}
+                  className="w-full px-3 py-2 border rounded"
+                />
+              )}
+            </div>
+          ))}
         </div>
-        <div className="flex justify-end mt-4 space-x-2">
+
+        <div className="flex justify-end mt-6 space-x-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            className="px-6 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+            disabled={isSaving}
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className={`px-6 py-2 rounded text-white ${
+              isSaving
+                ? "bg-blue-300 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
+            disabled={isSaving}
           >
-            Save
+            {isSaving ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
     </div>
   );
 };
+
 export default EditModal;

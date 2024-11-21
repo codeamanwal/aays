@@ -42,13 +42,13 @@ const Card = ({ entry, onEdit, onDelete, onView }) => {
 
       {/* Action Icons */}
       <div className="flex items-center space-x-3">
-        <button onClick={() => onView(entry)} className="relative">
+        <button onClick={onView} className="relative">
           <EyeIcon className="w-6 h-6 text-purple-500 hover:text-purple-600" />
         </button>
-        <button onClick={() => onEdit(entry)}>
+        <button onClick={onEdit}>
           <PencilIcon className="w-6 h-6 text-gray-500 hover:text-gray-600" />
         </button>
-        <button onClick={() => onDelete(entry)}>
+        <button onClick={onDelete}>
           <TrashIcon className="w-6 h-6 text-red-500 hover:text-red-600" />
         </button>
       </div>

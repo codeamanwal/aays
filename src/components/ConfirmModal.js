@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 
 const ConfirmModal = ({ isOpen, onClose, onConfirm, message }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsProcessing(true);
+    await onConfirm();
+    setIsProcessing(false);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -15,14 +23,20 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, message }) => {
           <button
             onClick={onClose}
             className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
+            disabled={isProcessing}
           >
             Cancel
           </button>
           <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+            onClick={handleConfirm}
+            className={`px-4 py-2 rounded-lg text-white ${
+              isProcessing
+                ? "bg-red-300 cursor-not-allowed"
+                : "bg-red-500 hover:bg-red-600 transition"
+            }`}
+            disabled={isProcessing}
           >
-            Confirm
+            {isProcessing ? "Confirming..." : "Confirm"}
           </button>
         </div>
       </div>
