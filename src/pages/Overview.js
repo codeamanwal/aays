@@ -9,7 +9,7 @@ const Overview = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-start justify-center h-screen mt-10 bg-gray-100">
+    <div className="flex items-start justify-center max-h-screen mt-10 bg-gray-100">
       <div className="flex gap-8">
         {/* Data Entry Button */}
         <button
