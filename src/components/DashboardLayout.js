@@ -1,13 +1,13 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import { Outlet } from "react-router-dom"; // Import Outlet
+import { Outlet } from "react-router-dom";
 
 const DashboardLayout = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
-      <div className="overflow-y-auto">
+      <div className="w-64 overflow-y-auto">
         <Sidebar />
       </div>
 
@@ -17,8 +17,8 @@ const DashboardLayout = () => {
         <Navbar />
 
         {/* Page Content */}
-        <div className="p-6 overflow-y-auto">
-          <Outlet /> {/* Render nested routes here */}
+        <div className="overflow-y-auto">
+          <Outlet />
         </div>
       </div>
     </div>

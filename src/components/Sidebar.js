@@ -4,18 +4,20 @@ import {
   UsersIcon,
   PencilSquareIcon,
   Cog8ToothIcon,
-  ArrowLeftStartOnRectangleIcon,
+  ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+
   const handleLogout = () => {
     // localStorage.removeItem("token");
     navigate(`/`);
   };
+
   return (
-    <div className="bg-[#131213] shadow-lg w-68 h-full py-6 pr-6 overflow-y-auto flex flex-col justify-between text-white">
+    <div className="bg-[#131213] shadow-lg w-64 h-full py-6 pr-6 overflow-y-auto flex flex-col justify-between text-white">
       {/* Logo */}
       <div className="space-y-8">
         <div className="flex items-center space-x-3 mb-8 pl-6">
@@ -86,10 +88,10 @@ const Sidebar = () => {
           <span className="text-md font-semibold">Settings</span>
         </NavLink>
         <button
-          onClick={() => handleLogout()}
+          onClick={handleLogout}
           className="flex items-center space-x-3 p-3 rounded-l-none rounded-lg text-white hover:bg-[#bb1ccc] transition pl-6 w-full"
         >
-          <ArrowLeftStartOnRectangleIcon className="h-5 w-5" />
+          <ArrowLeftOnRectangleIcon className="h-5 w-5" />
           <span className="text-md font-semibold">Logout</span>
         </button>
       </div>

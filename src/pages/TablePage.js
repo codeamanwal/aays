@@ -1,14 +1,36 @@
-import React, { useState, useEffect } from "react";
-import Card from "../components/Card";
+import React, { useState, useEffect, useMemo } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Collapse,
+  Box,
+  Typography,
+} from "@mui/material";
+import {
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  Edit,
+  Delete,
+  Visibility,
+} from "@mui/icons-material";
 import EditModal from "../components/EditModal";
 import ConfirmModal from "../components/ConfirmModal";
 import ViewModal from "../components/ViewModal";
 
 const TablePage = () => {
-  const loggedInUser = {
-    role: "admin", // Change to "admin" for admin users
-    name: "Jeremy", // User's name to filter entries
-  };
+  const loggedInUser = useMemo(
+    () => ({
+      role: "admin",
+      name: "Jeremy",
+    }),
+    []
+  );
 
   const [entries, setEntries] = useState([]);
   const [filteredEntries, setFilteredEntries] = useState([]);
@@ -16,14 +38,14 @@ const TablePage = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
-  const [loading, setLoading] = useState(true); // Loader state
+  const [loading, setLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
 
   // Fetch data from API
   useEffect(() => {
     const fetchEntries = async () => {
       try {
-        setLoading(true); // Show loader
+        setLoading(true);
         const response = await fetch(
           `${process.env.REACT_APP_BASE_URL}/all-forms`
         );
@@ -33,7 +55,7 @@ const TablePage = () => {
       } catch (error) {
         console.error("Error fetching entries:", error);
       } finally {
-        setLoading(false); // Hide loader
+        setLoading(false);
       }
     };
 
@@ -108,8 +130,10 @@ const TablePage = () => {
   };
 
   return (
-    <div className="p-10 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-semibold mb-4">Targets</h1>
+    <div className="p-10 bg-gray-100">
+      <Typography variant="h4" gutterBottom>
+        Targets
+      </Typography>
 
       {loading ? (
         // Loader UI
@@ -125,57 +149,54 @@ const TablePage = () => {
           )}
 
           {filteredEntries.length > 0 ? (
-            filteredEntries.map((entry, index) => (
-              <Card
-                key={index}
-                entry={{
-                  name:
-                    entry.fields.find((f) => f.label === "Name")?.userInput ||
-                    "N/A",
-                  account:
-                    entry.fields.find((f) => f.label === "Account")
-                      ?.userInput || "N/A",
-                  title:
-                    entry.fields.find((f) => f.label === "Title")?.userInput ||
-                    "N/A",
-                  createdBy: entry.createdBy,
-                  date:
-                    entry.fields.find((f) => f.label === "Date")?.userInput ||
-                    "N/A",
-                  status:
-                    entry.fields.find((f) => f.label === "Status")?.userInput ||
-                    "N/A",
-                }}
-                onEdit={() => handleEdit(entry)}
-                onDelete={() => handleDelete(entry)}
-                onView={() => handleView(entry)}
-              />
-            ))
+            <TableContainer component={Paper}>
+              <Table aria-label="collapsible table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell>Supplier Code</TableCell>
+                    <TableCell>Product Code</TableCell>
+                    <TableCell>Net Quantity (Kg)</TableCell>
+                    <TableCell>Purchase Order No.</TableCell>
+                    <TableCell>Batch Number</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredEntries.map((entry) => (
+                    <CollapsibleTableRow
+                      key={entry.formId}
+                      entry={entry}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                      onView={handleView}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           ) : (
             <p className="text-gray-500">No entries available</p>
           )}
         </>
       )}
 
-      {/* Edit Modal */}
+      {/* Modals */}
       {isEditModalOpen && (
         <EditModal
           entry={selectedEntry}
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          onSave={handleSave} // Pass the handleSave function
+          onSave={handleSave}
         />
       )}
-
-      {/* Confirm Delete Modal */}
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={confirmDelete}
-        message={`Are you sure you want to delete this entry?`}
+        message={"Are you sure you want to delete this entry?"}
       />
-
-      {/* View Modal */}
       <ViewModal
         entry={selectedEntry}
         isOpen={isViewModalOpen}
@@ -186,3 +207,75 @@ const TablePage = () => {
 };
 
 export default TablePage;
+
+// CollapsibleTableRow Component
+const CollapsibleTableRow = ({ entry, onEdit, onDelete, onView }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+
+  // Extract fields from entry
+  const getField = (label) =>
+    entry.fields.find((f) => f.label === label)?.userInput || "N/A";
+
+  const supplierCode = getField("Supplier Code");
+  const productCode = getField("Product Code");
+  const netQuantity = getField("Net Quantity");
+  const purchaseOrder = getField("Purchase Order");
+  const batchNumber = getField("Batch Number");
+  const status = getField("Status");
+
+  return (
+    <>
+      <TableRow>
+        <TableCell>
+          <IconButton size="small" onClick={handleToggle}>
+            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
+        </TableCell>
+        <TableCell>{supplierCode}</TableCell>
+        <TableCell>{productCode}</TableCell>
+        <TableCell>{netQuantity}</TableCell>
+        <TableCell>{purchaseOrder}</TableCell>
+        <TableCell>{batchNumber}</TableCell>
+        <TableCell>{status}</TableCell>
+        <TableCell>
+          <IconButton size="small" onClick={() => onView(entry)}>
+            <Visibility fontSize="small" />
+          </IconButton>
+          <IconButton size="small" onClick={() => onEdit(entry)}>
+            <Edit fontSize="small" />
+          </IconButton>
+          <IconButton size="small" onClick={() => onDelete(entry)}>
+            <Delete fontSize="small" />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <Typography variant="h6" gutterBottom component="div">
+                Additional Details
+              </Typography>
+              <Table size="small" aria-label="additional details">
+                <TableBody>
+                  {entry.fields.map((field) => (
+                    <TableRow key={field.label}>
+                      <TableCell component="th" scope="row">
+                        {field.label}
+                      </TableCell>
+                      <TableCell>{field.userInput || "N/A"}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};

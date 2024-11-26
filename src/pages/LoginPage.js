@@ -10,19 +10,16 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Static login credentials for demonstration
     const staticEmail = "user@example.com";
     const staticPassword = "password123";
 
     if (email === staticEmail && password === staticPassword) {
       console.log("Login successful");
-      // Proceed to dashboard or other authenticated route
       navigate(`/overview`)
     } else {
       setError("Invalid email or password");
     }
 
-    // Uncomment below to use API endpoint for login instead
     /*
     fetch("https://your-api-endpoint.com/login", {
       method: "POST",
@@ -52,7 +49,7 @@ const LoginPage = () => {
       {/* Left Side Image */}
       <div className="w-1/2 bg-blue-900 relative">
         <img
-          src="/assets/login-bg.png" // Replace with the correct path to your image
+          src="/assets/login-bg.png"
           alt="Brain graphic"
           className="w-full h-full object-cover opacity-80"
         />
