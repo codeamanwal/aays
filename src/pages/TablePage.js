@@ -96,6 +96,17 @@ const TablePage = () => {
     }
   };
 
+  // Save updated entry
+  const handleSave = (updatedEntry) => {
+    setEntries((prevEntries) =>
+      prevEntries.map((entry) =>
+        entry.formId === updatedEntry.formId ? updatedEntry : entry
+      )
+    );
+    setSuccessMessage("Form updated successfully!");
+    setIsEditModalOpen(false);
+  };
+
   return (
     <div className="p-10 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-semibold mb-4">Targets</h1>
@@ -147,11 +158,14 @@ const TablePage = () => {
       )}
 
       {/* Edit Modal */}
-      <EditModal
-        entry={selectedEntry}
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-      />
+      {isEditModalOpen && (
+        <EditModal
+          entry={selectedEntry}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={handleSave} // Pass the handleSave function
+        />
+      )}
 
       {/* Confirm Delete Modal */}
       <ConfirmModal

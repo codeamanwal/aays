@@ -86,14 +86,9 @@ const FormPage = () => {
       },
       {
         label: "Referencing DDS",
-        fieldType: "boolean",
-        userInput: formData.referencingDDS,
-      },
-      {
-        label: "Form Progress",
-        fieldType: "dropdown",
-        userInput: formData.formProgress,
-        options: ["Started", "In Progress", "Completed"],
+        fieldType: "dropdown", // Treated as dropdown in backend
+        userInput: formData.referencingDDS ? "true" : "false", // Convert boolean to string
+        options: ["true", "false"],
       },
       { label: "Name", fieldType: "text", userInput: formData.name },
       { label: "Account", fieldType: "text", userInput: formData.account },

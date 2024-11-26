@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 
 const EditModal = ({ entry, isOpen, onClose, onSave }) => {
-  const [formData, setFormData] = useState({ ...entry });
+  const [formData, setFormData] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
-  // Update formData whenever the entry prop changes
+  // Populate formData from entry fields
   useEffect(() => {
     if (entry) {
       const fieldsData = entry.fields.reduce((acc, field) => {
         acc[field.label] = field.userInput;
         return acc;
       }, {});
-      setFormData({ ...entry, ...fieldsData });
+      setFormData({ ...fieldsData });
     }
   }, [entry]);
 
@@ -20,21 +21,25 @@ const EditModal = ({ entry, isOpen, onClose, onSave }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const handleToggleChange = (label) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [label]: prevData[label] === "true" ? "false" : "true",
+    }));
+  };
+
   const handleSave = async () => {
     setIsSaving(true);
+    setSuccessMessage("");
 
     const updatedFields = entry.fields.map((field) => ({
       label: field.label,
       userInput: formData[field.label] || field.userInput,
+      ...(field.fieldType === "dropdown" && { options: field.options }),
     }));
 
-    const updatedEntry = {
-      formId: entry.formId,
-      createdBy: entry.createdBy,
-      fields: updatedFields,
-    };
+    const updatedEntry = { fields: updatedFields };
 
-    console.log(updatedEntry)
     try {
       const response = await fetch(
         `${process.env.REACT_APP_BASE_URL}/edit/${entry.formId}`,
@@ -47,16 +52,24 @@ const EditModal = ({ entry, isOpen, onClose, onSave }) => {
         }
       );
 
-      if (response.ok) {
-        const result = await response.json();
-        onSave(result); // Pass the updated entry to the parent
-        alert("Form updated successfully!");
-      } else {
-        alert("Failed to update the form. Please try again.");
+      // Handle non-JSON responses gracefully
+      if (!response.ok) {
+        const errorMessage = `Failed with status: ${response.status}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
       }
+
+      // Check for empty response
+      const result = await response.json().catch(() => null);
+
+      console.log("Response data:", result);
+
+      // Call onSave if successful
+      onSave(result || updatedEntry); // Pass back updated entry even if no JSON body
+      setSuccessMessage("Form updated successfully!");
     } catch (error) {
       console.error("Error updating the form:", error);
-      alert("An error occurred while updating the form.");
+      alert("Failed to update the form. Please try again.");
     } finally {
       setIsSaving(false);
       onClose();
@@ -80,7 +93,22 @@ const EditModal = ({ entry, isOpen, onClose, onSave }) => {
               >
                 {field.label}
               </label>
-              {field.fieldType === "dropdown" ? (
+              {field.label === "Referencing DDS" ? (
+                <div
+                  onClick={() => handleToggleChange(field.label)}
+                  className={`cursor-pointer w-12 h-6 flex items-center rounded-full p-1 ${
+                    formData[field.label] === "true"
+                      ? "bg-blue-600"
+                      : "bg-gray-300"
+                  }`}
+                >
+                  <div
+                    className={`h-4 w-4 bg-white rounded-full shadow-md transform ${
+                      formData[field.label] === "true" ? "translate-x-6" : ""
+                    }`}
+                  ></div>
+                </div>
+              ) : field.fieldType === "dropdown" ? (
                 <select
                   name={field.label}
                   value={formData[field.label] || ""}
@@ -127,6 +155,10 @@ const EditModal = ({ entry, isOpen, onClose, onSave }) => {
             {isSaving ? "Saving..." : "Save"}
           </button>
         </div>
+
+        {successMessage && (
+          <p className="text-green-600 font-semibold mt-4">{successMessage}</p>
+        )}
       </div>
     </div>
   );
