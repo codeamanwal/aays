@@ -1,19 +1,4 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Switch,
-  FormControlLabel,
-  Button,
-  Box,
-  Typography,
-  Paper,
-  Container,
-} from "@mui/material";
-import Grid from "@mui/material/Grid";
 
 const FormPage = () => {
   const [formData, setFormData] = useState({
@@ -148,206 +133,332 @@ const FormPage = () => {
   };
 
   return (
-    <Box width="100%" padding="20px">
-      <Container maxWidth="md">
-        <Paper elevation={3} style={{ padding: "20px" }}>
-          <form onSubmit={handleSubmit}>
-            <Typography variant="h5" align="center" gutterBottom>
-              Submit New Due-Diligence Statement Information
-            </Typography>
+    <div className="bg-gray-100 min-h-screen py-10">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Page Heading */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-center text-gray-900">
+            Due Diligence Statement Submission
+          </h1>
+          <p className="mt-2 text-center text-gray-600">
+            Please fill out the form below to submit the required information.
+          </p>
+        </div>
 
-            <Box mt={2}>
-              <Grid container spacing={2}>
+        <form onSubmit={handleSubmit} className="space-y-12">
+          {/* Section 1 */}
+          <div className="bg-white shadow sm:rounded-lg">
+            <div className="px-6 py-6">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Supplier Information
+              </h2>
+              <p className="mt-1 text-sm text-gray-600">
+                Provide details about the supplier and product.
+              </p>
+            </div>
+            <div className="border-t border-gray-200 px-6 py-6">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                 {/* Supplier Code */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="supplierCode"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Supplier or Partner Code{" "}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
                     name="supplierCode"
-                    label="Supplier or Partner Code (*)"
-                    onChange={handleChange}
-                    fullWidth
+                    id="supplierCode"
                     required
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Account Name */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="account"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Account Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
                     name="account"
-                    label="Account Name (*)"
-                    onChange={handleChange}
-                    fullWidth
+                    id="account"
                     required
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Product Code */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="productCode"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Product Code <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
                     name="productCode"
-                    label="Product Code (*)"
-                    onChange={handleChange}
-                    fullWidth
+                    id="productCode"
                     required
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Net Quantity */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    name="netQuantity"
-                    label="Net Quantity (Kg) (*)"
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="netQuantity"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Net Quantity (Kg) <span className="text-red-500">*</span>
+                  </label>
+                  <input
                     type="number"
-                    onChange={handleChange}
-                    fullWidth
+                    name="netQuantity"
+                    id="netQuantity"
                     required
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Purchase Order */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="purchaseOrder"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Purchase Order No. <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
                     name="purchaseOrder"
-                    label="Purchase Order No. (*)"
-                    onChange={handleChange}
-                    fullWidth
+                    id="purchaseOrder"
                     required
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Batch Number */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="batchNumber"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Batch Number <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
                     name="batchNumber"
-                    label="Batch Number (*)"
-                    onChange={handleChange}
-                    fullWidth
+                    id="batchNumber"
                     required
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
-                {/* EUDR Reference */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                </div>
+
+                {/* EUDR DDS Reference No. */}
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="eudrReference"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    EUDR DDS Reference No.
+                  </label>
+                  <input
+                    type="text"
                     name="eudrReference"
-                    label="EUDR DDS Reference No."
+                    id="eudrReference"
                     onChange={handleChange}
-                    fullWidth
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
-                {/* EUDR Verification */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                </div>
+
+                {/* EUDR DDS Verification No. */}
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="eudrVerification"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    EUDR DDS Verification No.
+                  </label>
+                  <input
+                    type="text"
                     name="eudrVerification"
-                    label="EUDR DDS Verification No."
+                    id="eudrVerification"
                     onChange={handleChange}
-                    fullWidth
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* EUDR Submission Date */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="eudrSubmissionDate"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    EUDR Submission Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
                     name="eudrSubmissionDate"
-                    label="EUDR Submission Date (*)"
-                    type="date"
-                    onChange={handleChange}
-                    fullWidth
+                    id="eudrSubmissionDate"
                     required
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Referencing DDS Switch */}
-                <Grid item xs={12} sm={6}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.referencingDDS}
-                        onChange={handleToggleChange}
-                        name="referencingDDS"
-                        color="primary"
-                      />
-                    }
-                    label="Referencing DDS?"
+                <div className="sm:col-span-3 flex items-center mt-6">
+                  <input
+                    id="referencingDDS"
+                    name="referencingDDS"
+                    type="checkbox"
+                    checked={formData.referencingDDS}
+                    onChange={handleToggleChange}
+                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                   />
-                </Grid>
+                  <label
+                    htmlFor="referencingDDS"
+                    className="ml-2 block text-sm font-medium text-gray-700"
+                  >
+                    Referencing DDS?
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2 */}
+          <div className="bg-white shadow sm:rounded-lg">
+            <div className="px-6 py-6">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Personal Information
+              </h2>
+              <p className="mt-1 text-sm text-gray-600">
+                Please provide your contact details.
+              </p>
+            </div>
+            <div className="border-t border-gray-200 px-6 py-6">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                 {/* Name */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
                     name="name"
-                    label="Name (*)"
-                    onChange={handleChange}
-                    fullWidth
+                    id="name"
                     required
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Title */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Title <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
                     name="title"
-                    label="Title (*)"
-                    onChange={handleChange}
-                    fullWidth
+                    id="title"
                     required
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Date */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    name="date"
-                    label="Date (*)"
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="date"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
                     type="date"
-                    onChange={handleChange}
-                    fullWidth
+                    name="date"
+                    id="date"
                     required
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                </Grid>
+                </div>
+
                 {/* Status */}
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth required>
-                    <InputLabel id="status-label">Status</InputLabel>
-                    <Select
-                      labelId="status-label"
-                      name="status"
-                      value={formData.status}
-                      onChange={handleChange}
-                      label="Status"
-                    >
-                      <MenuItem value="">
-                        <em>Select Status</em>
-                      </MenuItem>
-                      <MenuItem value="Started">Started</MenuItem>
-                      <MenuItem value="In Progress">In Progress</MenuItem>
-                      <MenuItem value="Completed">Completed</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Box>
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="status"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Status <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="status"
+                    name="status"
+                    required
+                    value={formData.status}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option value="">Select Status</option>
+                    <option value="Started">Started</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            {/* Buttons */}
-            <Box mt={3} display="flex" justifyContent="flex-end">
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Saving..." : "Save"}
-              </Button>
-            </Box>
+          {/* Submit Button */}
+          <div className="mt-6 flex items-center justify-end gap-x-6">
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="text-sm font-semibold text-gray-700"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500"
+            >
+              {isSubmitting ? "Saving..." : "Submit"}
+            </button>
+          </div>
 
-            {/* Success Message */}
-            {successMessage && (
-              <Typography
-                variant="body1"
-                color="success.main"
-                style={{ marginTop: "20px" }}
-              >
-                {successMessage}
-              </Typography>
-            )}
-          </form>
-        </Paper>
-      </Container>
-    </Box>
+          {/* Success Message */}
+          {successMessage && (
+            <div className="mt-4 text-green-600 text-center">
+              {successMessage}
+            </div>
+          )}
+        </form>
+      </div>
+    </div>
   );
 };
 
