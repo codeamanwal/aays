@@ -17,7 +17,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="bg-[#131213] shadow-lg w-64 h-full py-6 pr-6 overflow-y-auto flex flex-col justify-between text-white">
+    <div className="bg-[#131213] shadow-lg w-54 h-full py-6 pr-6 overflow-y-auto flex flex-col justify-between text-white">
       {/* Logo */}
       <div className="space-y-8">
         <div className="flex items-center space-x-3 mb-8 pl-6">
@@ -54,7 +54,7 @@ const Sidebar = () => {
             }
           >
             <UsersIcon className="h-5 w-5" />
-            <span className="text-md font-semibold">User Management</span>
+            <span className="text-md font-semibold">User</span>
           </NavLink>
           <NavLink
             to="/form"

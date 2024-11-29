@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { toast } from "react-toastify";
 
 const FormPage = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,10 @@ const FormPage = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  // Remove successMessage state as we'll use toasts instead
+  // const [successMessage, setSuccessMessage] = useState("");
+
+  const formRef = useRef(null); // Reference to the form for potential future use
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -40,7 +44,7 @@ const FormPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSuccessMessage("");
+    // setSuccessMessage("");
 
     const fields = [
       {
@@ -69,12 +73,12 @@ const FormPage = () => {
         userInput: formData.batchNumber,
       },
       {
-        label: "EUDR DDS Reference",
+        label: "EUDR DDS Reference No.",
         fieldType: "text",
         userInput: formData.eudrReference,
       },
       {
-        label: "EUDR DDS Verification",
+        label: "EUDR DDS Verification No.",
         fieldType: "text",
         userInput: formData.eudrVerification,
       },
@@ -119,14 +123,39 @@ const FormPage = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("Form saved successfully:", result);
-        setSuccessMessage(`Form saved successfully! Form ID: ${result.formId}`);
+        // setSuccessMessage(`Form saved successfully! Form ID: ${result.formId}`);
+
+        // Trigger toast notification
+        toast.success(`Form saved successfully! Form ID: ${result.formId}`);
+
+        // Optionally, reset the form here
+        setFormData({
+          supplierCode: "",
+          productCode: "",
+          netQuantity: "",
+          purchaseOrder: "",
+          batchNumber: "",
+          eudrReference: "",
+          eudrVerification: "",
+          eudrSubmissionDate: "",
+          referencingDDS: false,
+          name: "",
+          account: "",
+          title: "",
+          createdBy: "Aman",
+          date: "",
+          status: "",
+        });
+
+        // Optionally, reset the form fields refocus if needed
+        // formRef.current.reset();
       } else {
         console.error("Failed to save the form.");
-        alert("Failed to save the form. Please try again.");
+        toast.error("Failed to save the form. Please try again.");
       }
     } catch (error) {
       console.error("Error while saving the form:", error);
-      alert("An error occurred while saving the form.");
+      toast.error("An error occurred while saving the form.");
     } finally {
       setIsSubmitting(false);
     }
@@ -136,28 +165,32 @@ const FormPage = () => {
     <div className="bg-gray-100 min-h-screen py-10">
       <div className="max-w-7xl mx-auto px-6">
         {/* Page Heading */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-center text-gray-900">
+        <div className="mb-12 text-left">
+          <h1 className="text-3xl font-bold text-gray-900">
             Due Diligence Statement Submission
           </h1>
-          <p className="mt-2 text-center text-gray-600">
+          <p className="mt-4 text-md text-gray-600">
             Please fill out the form below to submit the required information.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-12">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-12"
+          ref={formRef} // Reference to the form
+        >
           {/* Section 1 */}
-          <div className="bg-white shadow sm:rounded-lg">
-            <div className="px-6 py-6">
-              <h2 className="text-xl font-semibold text-gray-800">
+          <div className="bg-white shadow-lg sm:rounded-lg">
+            <div className="px-8 py-6">
+              <h2 className="text-2xl font-semibold text-gray-800">
                 Supplier Information
               </h2>
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-2 text-gray-600">
                 Provide details about the supplier and product.
               </p>
             </div>
-            <div className="border-t border-gray-200 px-6 py-6">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+            <div className="border-t border-gray-200 px-8 py-6">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 {/* Supplier Code */}
                 <div className="sm:col-span-3">
                   <label
@@ -173,7 +206,9 @@ const FormPage = () => {
                     id="supplierCode"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.supplierCode}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter supplier code"
                   />
                 </div>
 
@@ -191,7 +226,9 @@ const FormPage = () => {
                     id="account"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.account}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter account name"
                   />
                 </div>
 
@@ -209,7 +246,9 @@ const FormPage = () => {
                     id="productCode"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.productCode}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter product code"
                   />
                 </div>
 
@@ -227,7 +266,9 @@ const FormPage = () => {
                     id="netQuantity"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.netQuantity}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter net quantity"
                   />
                 </div>
 
@@ -245,7 +286,9 @@ const FormPage = () => {
                     id="purchaseOrder"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.purchaseOrder}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter purchase order number"
                   />
                 </div>
 
@@ -263,7 +306,9 @@ const FormPage = () => {
                     id="batchNumber"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.batchNumber}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter batch number"
                   />
                 </div>
 
@@ -280,7 +325,9 @@ const FormPage = () => {
                     name="eudrReference"
                     id="eudrReference"
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.eudrReference}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter EUDR DDS Reference"
                   />
                 </div>
 
@@ -297,7 +344,9 @@ const FormPage = () => {
                     name="eudrVerification"
                     id="eudrVerification"
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.eudrVerification}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter EUDR DDS Verification"
                   />
                 </div>
 
@@ -315,7 +364,8 @@ const FormPage = () => {
                     id="eudrSubmissionDate"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.eudrSubmissionDate}
+                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm shadow-md"
                   />
                 </div>
 
@@ -341,17 +391,17 @@ const FormPage = () => {
           </div>
 
           {/* Section 2 */}
-          <div className="bg-white shadow sm:rounded-lg">
-            <div className="px-6 py-6">
-              <h2 className="text-xl font-semibold text-gray-800">
+          <div className="bg-white shadow-lg sm:rounded-lg">
+            <div className="px-8 py-6">
+              <h2 className="text-2xl font-semibold text-gray-800">
                 Personal Information
               </h2>
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-2 text-gray-600">
                 Please provide your contact details.
               </p>
             </div>
-            <div className="border-t border-gray-200 px-6 py-6">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+            <div className="border-t border-gray-200 px-8 py-6">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 {/* Name */}
                 <div className="sm:col-span-3">
                   <label
@@ -366,7 +416,9 @@ const FormPage = () => {
                     id="name"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.name}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter your name"
                   />
                 </div>
 
@@ -384,7 +436,9 @@ const FormPage = () => {
                     id="title"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.title}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter your title"
                   />
                 </div>
 
@@ -402,7 +456,8 @@ const FormPage = () => {
                     id="date"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.date}
+                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm shadow-md"
                   />
                 </div>
 
@@ -420,7 +475,7 @@ const FormPage = () => {
                     required
                     value={formData.status}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm shadow-md"
                   >
                     <option value="">Select Status</option>
                     <option value="Started">Started</option>
@@ -437,25 +492,20 @@ const FormPage = () => {
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="text-sm font-semibold text-gray-700"
+              className="text-sm font-semibold text-gray-700 hover:text-gray-900"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500"
+              className={`rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 ${
+                isSubmitting ? "cursor-not-allowed opacity-50" : ""
+              }`}
             >
               {isSubmitting ? "Saving..." : "Submit"}
             </button>
           </div>
-
-          {/* Success Message */}
-          {successMessage && (
-            <div className="mt-4 text-green-600 text-center">
-              {successMessage}
-            </div>
-          )}
         </form>
       </div>
     </div>

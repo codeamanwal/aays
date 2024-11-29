@@ -1,27 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Collapse,
-  Box,
-  Typography,
-} from "@mui/material";
-import {
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-  Edit,
-  Delete,
-  Visibility,
-} from "@mui/icons-material";
 import EditModal from "../components/EditModal";
 import ConfirmModal from "../components/ConfirmModal";
 import ViewModal from "../components/ViewModal";
+import CollapsibleTableRow from "../components/CollapsibleTableRow";
 
 const TablePage = () => {
   const loggedInUser = useMemo(
@@ -130,152 +111,109 @@ const TablePage = () => {
   };
 
   return (
-    <div className="p-10 bg-gray-100">
-      <Typography variant="h4" gutterBottom>
-        Targets
-      </Typography>
-
-      {loading ? (
-        // Loader UI
-        <div className="flex justify-center items-center h-60">
-          <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+    <div className="bg-gray-100 min-h-screen p-10">
+      <div className="max-w-7xl mx-auto">
+        {/* Page Heading */}
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Due Diligence Statements
+          </h1>
+          <p className="mt-2 text-gray-600">
+            View, edit, and manage due diligence statements below.
+          </p>
         </div>
-      ) : (
-        <>
-          {successMessage && (
-            <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-lg">
-              {successMessage}
-            </div>
-          )}
 
-          {filteredEntries.length > 0 ? (
-            <TableContainer component={Paper}>
-              <Table aria-label="collapsible table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell />
-                    <TableCell>Supplier Code</TableCell>
-                    <TableCell>Product Code</TableCell>
-                    <TableCell>Net Quantity (Kg)</TableCell>
-                    <TableCell>Purchase Order No.</TableCell>
-                    <TableCell>Batch Number</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredEntries.map((entry) => (
-                    <CollapsibleTableRow
-                      key={entry.formId}
-                      entry={entry}
-                      onEdit={handleEdit}
-                      onDelete={handleDelete}
-                      onView={handleView}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <p className="text-gray-500">No entries available</p>
-          )}
-        </>
-      )}
+        {/* Success Message */}
+        {successMessage && (
+          <div className="mb-4 p-4 bg-green-100 text-green-700 rounded-md">
+            {successMessage}
+          </div>
+        )}
 
-      {/* Modals */}
-      {isEditModalOpen && (
-        <EditModal
-          entry={selectedEntry}
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          onSave={handleSave}
-        />
-      )}
-      <ConfirmModal
-        isOpen={isConfirmModalOpen}
-        onClose={() => setIsConfirmModalOpen(false)}
-        onConfirm={confirmDelete}
-        message={"Are you sure you want to delete this entry?"}
-      />
-      <ViewModal
-        entry={selectedEntry}
-        isOpen={isViewModalOpen}
-        onClose={() => setIsViewModalOpen(false)}
-      />
+        {/* Loader */}
+        {loading ? (
+          <div className="flex justify-center items-center h-60">
+            <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+          </div>
+        ) : (
+          <>
+            {filteredEntries.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead>
+                    <tr>
+                      <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Details
+                      </th>
+                      <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Supplier Code
+                      </th>
+                      <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Product Code
+                      </th>
+                      <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Net Quantity (Kg)
+                      </th>
+                      <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Purchase Order No.
+                      </th>
+                      <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Batch Number
+                      </th>
+                      <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredEntries.map((entry) => (
+                      <CollapsibleTableRow
+                        key={entry.formId}
+                        entry={entry}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onView={handleView}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-center text-gray-500">No entries available.</p>
+            )}
+          </>
+        )}
+
+        {/* Modals */}
+        {isEditModalOpen && (
+          <EditModal
+            entry={selectedEntry}
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            onSave={handleSave}
+          />
+        )}
+        {isConfirmModalOpen && (
+          <ConfirmModal
+            isOpen={isConfirmModalOpen}
+            onClose={() => setIsConfirmModalOpen(false)}
+            onConfirm={confirmDelete}
+            message={"Are you sure you want to delete this entry?"}
+          />
+        )}
+        {isViewModalOpen && (
+          <ViewModal
+            entry={selectedEntry}
+            isOpen={isViewModalOpen}
+            onClose={() => setIsViewModalOpen(false)}
+          />
+        )}
+      </div>
     </div>
   );
 };
 
 export default TablePage;
-
-// CollapsibleTableRow Component
-const CollapsibleTableRow = ({ entry, onEdit, onDelete, onView }) => {
-  const [open, setOpen] = useState(false);
-
-  const handleToggle = () => {
-    setOpen(!open);
-  };
-
-  // Extract fields from entry
-  const getField = (label) =>
-    entry.fields.find((f) => f.label === label)?.userInput || "N/A";
-
-  const supplierCode = getField("Supplier Code");
-  const productCode = getField("Product Code");
-  const netQuantity = getField("Net Quantity");
-  const purchaseOrder = getField("Purchase Order");
-  const batchNumber = getField("Batch Number");
-  const status = getField("Status");
-
-  return (
-    <>
-      <TableRow>
-        <TableCell>
-          <IconButton size="small" onClick={handleToggle}>
-            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-          </IconButton>
-        </TableCell>
-        <TableCell>{supplierCode}</TableCell>
-        <TableCell>{productCode}</TableCell>
-        <TableCell>{netQuantity}</TableCell>
-        <TableCell>{purchaseOrder}</TableCell>
-        <TableCell>{batchNumber}</TableCell>
-        <TableCell>{status}</TableCell>
-        <TableCell>
-          <IconButton size="small" onClick={() => onView(entry)}>
-            <Visibility fontSize="small" />
-          </IconButton>
-          <IconButton size="small" onClick={() => onEdit(entry)}>
-            <Edit fontSize="small" />
-          </IconButton>
-          <IconButton size="small" onClick={() => onDelete(entry)}>
-            <Delete fontSize="small" />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Additional Details
-              </Typography>
-              <Table size="small" aria-label="additional details">
-                <TableBody>
-                  {entry.fields.map((field) => (
-                    <TableRow key={field.label}>
-                      <TableCell component="th" scope="row">
-                        {field.label}
-                      </TableCell>
-                      <TableCell>{field.userInput || "N/A"}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  );
-};

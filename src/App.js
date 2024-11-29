@@ -1,3 +1,4 @@
+// App.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DashboardLayout from "./components/DashboardLayout";
@@ -7,9 +8,27 @@ import LoginPage from "./pages/LoginPage";
 import Overview from "./pages/Overview";
 import Settings from "./pages/Settings";
 
+// Import ToastContainer and the CSS for react-toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <Router>
+      {/* ToastContainer should be placed inside Router to allow navigation-based toasts */}
+      <ToastContainer
+        position="top-right" // Position of the toast
+        autoClose={5000} // Auto close after 5 seconds
+        hideProgressBar={false} // Show progress bar
+        newestOnTop={false} // Newest toast on top
+        closeOnClick // Close on click
+        rtl={false} // Left-to-right layout
+        pauseOnFocusLoss // Pause when window loses focus
+        draggable // Allow dragging to dismiss
+        pauseOnHover // Pause on hover
+        theme="colored" // Theme of the toast ('light', 'dark', 'colored')
+      />
+
       <Routes>
         {/* Public route for login */}
         <Route path="/" element={<LoginPage />} />
