@@ -149,7 +149,7 @@ export const FormDetails = ({ entry , isOpen, onClose}) => {
     if (!isOpen || !entry) return null;
 
     return (
-      <div className="fixed inset-10 left-20 right-20 z-50 bg-gray-50  rounded-lg shadow-xl max-w-3xl w-full mx-auto pb-10 overflow-hidden">
+      <div className="fixed inset-10 left-20 right-20 bg-opacity-50 z-50 bg-gray-50  rounded-lg shadow-xl max-w-3xl w-full mx-auto pb-10 overflow-hidden">
         <FormHeader formId={entry.formId} createdBy={entry.createdBy} onClose={onClose} />
 
         <div className="p-6">
