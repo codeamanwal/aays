@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
-import EditModal from "../components/EditModal";
 import ConfirmModal from "../components/ConfirmModal";
-import ViewModal from "../components/ViewModal";
 import CollapsibleTableRow from "../components/CollapsibleTableRow";
+import { FormDetails } from "../components/Formdetail";
+import { EditForm } from "../components/Editdetail";
+
 
 const TablePage = () => {
   const loggedInUser = useMemo(
@@ -42,6 +43,7 @@ const TablePage = () => {
 
     fetchEntries();
   }, []);
+
 
   // Filter entries based on user role
   useEffect(() => {
@@ -189,7 +191,7 @@ const TablePage = () => {
 
         {/* Modals */}
         {isEditModalOpen && (
-          <EditModal
+          <EditForm
             entry={selectedEntry}
             isOpen={isEditModalOpen}
             onClose={() => setIsEditModalOpen(false)}
@@ -205,7 +207,7 @@ const TablePage = () => {
           />
         )}
         {isViewModalOpen && (
-          <ViewModal
+          <FormDetails
             entry={selectedEntry}
             isOpen={isViewModalOpen}
             onClose={() => setIsViewModalOpen(false)}
