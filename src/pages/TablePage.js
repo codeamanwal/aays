@@ -44,6 +44,11 @@ const TablePage = () => {
     fetchEntries();
   }, []);
 
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setEntries(data);
+  //   setLoading(false);
+  // },[])
 
   // Filter entries based on user role
   useEffect(() => {

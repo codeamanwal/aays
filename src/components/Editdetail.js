@@ -1,13 +1,16 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { Edit,X } from 'lucide-react';
 
 export function FormDialog({ formData, onClose }) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
           {/* Header */}
-          <div className="flex items-center px-6 py-4  bg-[#bb1ccc]  text-white justify-between p-6 border-b border-gray-200">
-            <h2 className="text-2xl font-semibold">Edit Form</h2>
+          <div className="flex items-center px-6 py-4  bg-gradient-to-r from-[#ac1ccc] to-[#aa1ccc]  text-white justify-between p-6 border-b border-gray-200">
+            <div className='flex items-center space-x-3 mb-2'>
+              <Edit className='text-white' size={28} />
+              <h2 className="text-2xl font-semibold">Edit Form</h2>
+            </div>
             <button
               onClick={onClose}
               className="p-2  rounded-full transition-colors"

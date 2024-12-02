@@ -2,27 +2,6 @@ import React from 'react';
 // import { FormDetailRow } from './FormDetailRow';
 import { ClipboardList, X } from 'lucide-react';
 
-const entry = {
-    formId: "2MUH9R",
-    createdBy: "Aman",
-    fields: [
-      { id: 116, label: "Supplier Code", fieldType: "text", userInput: "123" },
-      { id: 117, label: "Product Code", fieldType: "text", userInput: "Test" },
-      { id: 118, label: "Net Quantity", fieldType: "number", userInput: "2" },
-      { id: 119, label: "Purchase Order", fieldType: "text", userInput: "123" },
-      { id: 120, label: "Batch Number", fieldType: "text", userInput: "123" },
-      { id: 121, label: "EUDR DDS Reference", fieldType: "text", userInput: "123" },
-      { id: 122, label: "EUDR DDS Verification", fieldType: "text", userInput: "Test" },
-      { id: 123, label: "EUDR Submission Date", fieldType: "date", userInput: "2024-11-30" },
-      { id: 124, label: "Referencing DDS", fieldType: "dropdown", userInput: "true", options: ["true", "false"] },
-      { id: 125, label: "Name", fieldType: "text", userInput: "Aman" },
-      { id: 126, label: "Account", fieldType: "text", userInput: "Test" },
-      { id: 127, label: "Title", fieldType: "text", userInput: "Test" },
-      { id: 128, label: "Created By", fieldType: "text", userInput: "Aman" },
-      { id: 129, label: "Date", fieldType: "date", userInput: "2024-11-30" },
-      { id: 130, label: "Status", fieldType: "dropdown", userInput: "Started", options: ["Started", "In Progress", "Completed"] }
-    ]
-  };
 
 export const StatusBadge = ({ status }) => {
     const getStatusColor = (status) => {
@@ -107,7 +86,7 @@ export const FormField= ({ field }) => {
 
 export const FormHeader= ({ formId, createdBy, onClose }) => {
     return (
-      <div className="px-6 py-4  bg-[#bb1ccc]  text-white">
+      <div className="px-6 py-4 bg-gradient-to-r from-[#ac1ccc] to-[#aa1ccc]  text-white">
         <div className ="flex justify-between items-center">
         <div className="flex items-center space-x-3 mb-2">
           <ClipboardList className="text-white" size={24} />
@@ -149,7 +128,7 @@ export const FormDetails = ({ entry , isOpen, onClose}) => {
     if (!isOpen || !entry) return null;
 
     return (
-      <div className="fixed inset-10 left-20 right-20 bg-opacity-50 z-50 bg-gray-50  rounded-lg shadow-xl max-w-3xl w-full mx-auto pb-10 overflow-hidden">
+      <div className="fixed inset-10 left-20 right-20 z-50 bg-gray-50 border-gray-400 border-1 rounded-lg shadow-xl max-w-3xl w-full mx-auto pb-10 overflow-hidden">
         <FormHeader formId={entry.formId} createdBy={entry.createdBy} onClose={onClose} />
 
         <div className="p-6">
