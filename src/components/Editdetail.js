@@ -57,7 +57,7 @@ export function FormDialog({ formData, onClose, onSave }) {
           <FormHeader formId={formData.formId} createdBy={formData.createdBy} onClose={onClose} />
   
           {/* Form Content */}
-          <form onSubmit={handleSubmit} className="p-6 bg-white">
+          <div className="p-6 bg-white">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {formData.fields.map((field) => (
                 <FormField key={field.id} field={field} />
@@ -73,14 +73,13 @@ export function FormDialog({ formData, onClose, onSave }) {
                 Cancel
               </button>
               <button 
-                type="submit"
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 onClick={handleSubmit}
               >
                 Save Changes
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     );
