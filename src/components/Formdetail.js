@@ -121,14 +121,15 @@ export const FormHeader= ({ formId, createdBy, onClose }) => {
         </div>
       </div>
     );
-  };
+};
 
 export const FormDetails = ({ entry , isOpen, onClose}) => {
 
     if (!isOpen || !entry) return null;
 
     return (
-      <div className="fixed inset-10 left-20 right-20 z-50 bg-gray-50 border-gray-400 border-1 rounded-lg shadow-xl max-w-3xl w-full mx-auto pb-10 overflow-hidden">
+      <div className='fixed w-full mx-auto inset-0 md:w-[84%] 2xl:w-[87%] mr-0 max-h-fit top-10'>
+      <div className="inset-0 top-10 right-0 bg-white mx-auto my-auto rounded-xl shadow-xl max-w-3xl max-h-fit overflow-y-auto z-50 bg-gray-50 pb-10 overflow-hidden">
         <FormHeader formId={entry.formId} createdBy={entry.createdBy} onClose={onClose} />
 
         <div className="p-6">
@@ -138,6 +139,7 @@ export const FormDetails = ({ entry , isOpen, onClose}) => {
             ))}
           </div>
         </div>
+      </div>
       </div>
     );
 };
