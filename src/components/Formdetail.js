@@ -128,12 +128,12 @@ export const FormDetails = ({ entry , isOpen, onClose}) => {
     if (!isOpen || !entry) return null;
 
     return (
-      <div className='fixed w-full mx-auto inset-0 md:w-[84%] 2xl:w-[87%] mr-0 max-h-fit top-10'>
-      <div className="inset-0 top-10 right-0 bg-white mx-auto my-auto rounded-xl shadow-xl max-w-3xl max-h-fit overflow-y-auto z-50 bg-gray-50 pb-10 overflow-hidden">
+      <div className='fixed w-full mx-auto inset-0 md:w-[84%] overflow-y-auto 2xl:w-[87%] mr-0 max-h-screen top-10'>
+      <div className="inset-0 top-10 right-0 bg-white mx-auto my-auto rounded-xl shadow-xl max-w-3xl max-h-fit overflow-y-auto z-50 bg-gray-50 pb-10">
         <FormHeader formId={entry.formId} createdBy={entry.createdBy} onClose={onClose} />
 
         <div className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-4">
             {entry.fields.map((field) => (
               <FormField key={field.id} field={field} />
             ))}
