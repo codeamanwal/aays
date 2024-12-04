@@ -5,6 +5,7 @@ import {
   PencilSquareIcon,
   Cog8ToothIcon,
   ArrowLeftOnRectangleIcon,
+  PencilIcon
 } from "@heroicons/react/24/solid";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -68,6 +69,19 @@ const Sidebar = () => {
           >
             <PencilSquareIcon className="h-5 w-5" />
             <span className="text-md font-semibold">Forms</span>
+          </NavLink>
+          <NavLink
+            to="/customize"
+            className={({ isActive }) =>
+              `flex items-center space-x-3 p-3 rounded-l-none rounded-lg transition pl-6 ${
+                isActive
+                  ? "bg-gradient-to-r from-[#FCFCFC] via-[#E0E0E0] to-[#767171] text-[#C730CB]"
+                  : "text-white hover:bg-[#bb1ccc]"
+              }`
+            }
+          >
+            <PencilIcon className="h-5 w-5" />
+            <span className="text-md font-semibold">Customize</span>
           </NavLink>
         </nav>
       </div>

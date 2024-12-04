@@ -7,10 +7,12 @@ import FormPage from "./pages/FormPage";
 import LoginPage from "./pages/LoginPage";
 import Overview from "./pages/Overview";
 import Settings from "./pages/Settings";
+import CustomizePage from "./pages/CustomizeFormPage";
 
 // Import ToastContainer and the CSS for react-toastify
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
           <Route path="/user" element={<TablePage />} />
           <Route path="/form" element={<FormPage />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/customize" element={<CustomizePage />} />
+
         </Route>
       </Routes>
     </Router>
