@@ -89,13 +89,13 @@ const CustomizePage = () => {
         <div className="mt-8 flex flex-wrap justify-end  text-black gap-4 mb-5 p-4">
           <button
             onClick={handleCancle}
-            className="rounded-md bg-gray-100 px-6 py-2 text-black shadow-sm transition-all text-white shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="rounded-md bg-gray-100 px-6 py-2 text-black shadow-sm transition-all  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           >
             Cancle
           </button>
           <button
             onClick={handleSubmit}
-            className="rounded-md bg-indigo-600 px-6 py-2 text-white shadow-sm transition-all text-white shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="rounded-md bg-indigo-600 px-6 py-2 text-white shadow-sm transition-all hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           >
             Submit
           </button>
