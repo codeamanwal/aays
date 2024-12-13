@@ -1,38 +1,52 @@
 import React, { useState } from "react"; 
-
+import axios from 'axios';  
 const CustomizePage = () => {
   const [items, setItems] = useState([
-    { id: '1', label: 'Supplier Code', checked: false },
-    { id: '2', label: 'Product Code', checked: false },
-    { id: '3', label: 'Net Quantity', checked: false },
-    { id: '4', label: 'Purchase Order', checked: false },
-    { id: '5', label: 'Batch Number', checked: false },
-    { id: '6', label: 'EUDR DDS Reference', checked: false },
-    { id: '7', label: 'EUDR DDS Verification', checked: false },
-    { id: '8', label: 'EUDR Submission Date', checked: false },
-    { id: '9', label: 'Referencing DDS', checked: false },
-    { id: '10', label: 'Name', checked: false },
-    { id: '11', label: 'Account', checked: false },
-    { id: '12', label: 'Title', checked: false },
-    { id: '13', label: 'Created By', checked: false },
-    { id: '14', label: 'Date', checked: false },
-    { id: '15', label: 'Status', checked: false },
+    { id: '1',  fieldType:'text', label: 'Supplier Code', required: false },
+    { id: '2',  fieldType:'text', label: 'Product Code', required: false },
+    { id: '3',  fieldType:'number', label: 'Net Quantity', required: false },
+    { id: '4',  fieldType:'text', label: 'Purchase Order', required: false },
+    { id: '5',  fieldType:'text', label: 'Batch Number', required: false },
+    { id: '6',  fieldType:'text', label: 'EUDR DDS Reference', required: false },
+    { id: '7',  fieldType:'text', label: 'EUDR DDS Verification', required: false },
+    { id: '8',  fieldType:'date', label: 'EUDR Submission Date', required: false },
+    { id: '9',  fieldType:'dropdown',options: ['true', 'false'], label: 'Referencing DDS', required: false },
+    { id: '10', fieldType:'text',  label: 'Name', required: false },
+    { id: '11', fieldType:'text',  label: 'Account', required: false },
+    { id: '12', fieldType:'text',  label: 'Title', required: false },
+    { id: '13', fieldType:'text',  label: 'Created By', required: false },
+    { id: '14', fieldType:'date',  label: 'Date', required: false },
+    { id: '15', fieldType:'dropdown',"options": ["Started", "In Progress","Completed"], label:'Status', required: false },
   ])
 
   const handleToggle = (id) => {
     setItems(items.map(item => 
-      item.id === id ? { ...item, checked: !item.checked } : item
+      item.id === id ? { ...item, required: !item.required } : item
     ))
   }
 
-  const handleSubmit = () => {
-    const checkedItems = items.filter(item => item.checked)
-    console.log('Checked items:', checkedItems)
+  const handleSubmit = async() => {
+    const requiredItems = items.filter(item => item.required)
+    
+    console.log('required items:', requiredItems)
+    const data ={
+      fields:requiredItems,
+    }
+    await axios.post(`${process.env.REACT_APP_BASE_URL}/create/admin`, data
+    ).then(
+      (response) => {
+        console.log("response", response);
+      }
+    ).catch(
+      (error) => {
+        console.log("error", error);
+      }
+    )
     // logic for backend 
   }
   const handleCancle= ()=>{
     setItems(() => {
-        return items.map(item => ({ ...item, checked: false })) ;
+        return items.map(item => ({ ...item, required: false })) ;
     })
   }
 
@@ -54,13 +68,13 @@ const CustomizePage = () => {
             <div
               key={item.id}
               className={`rounded-lg border bg-white p-4 shadow-sm transition-all ${
-                item.checked ? 'border-purple-500 ring-2 ring-purple-500' : 'border-gray-200'
+                item.required ? 'border-purple-500 ring-2 ring-purple-500' : 'border-gray-200'
               }`}
             >
               <label className="flex cursor-pointer items-center space-x-3">
                 <input
                   type="checkbox"
-                  checked={item.checked}
+                  required={item.required}
                   onChange={() => handleToggle(item.id)}
                   className="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                 />
