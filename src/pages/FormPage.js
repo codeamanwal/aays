@@ -532,7 +532,7 @@ const FormPage = () => {
       setFormId(localFormId);
       fetchFormData(localFormId);
     } else {
-      toast.error("Form ID not found in localStorage!");
+      toast.error("First create a form in the customize page and then come back ");
     }
   }, []);
 
