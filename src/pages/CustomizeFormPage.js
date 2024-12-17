@@ -60,7 +60,7 @@ const CustomizePage = () => {
       // Uncheck items after successful submission
       setItems(items.map(item => ({ ...item, required: false })));
 
-      toast.success('Form submitted successfully!');
+      toast.success('Your fields saved successfully!');
       setLoading(false);
 
     } catch (error) {
