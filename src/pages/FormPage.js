@@ -571,6 +571,7 @@ const FormPage = () => {
     setIsSubmitting(true);
 
     const payload = {
+      formId: formId,
       createdBy: "Aman",
       fields: Object.entries(formData).map(([label, userInput]) => ({
         label,
